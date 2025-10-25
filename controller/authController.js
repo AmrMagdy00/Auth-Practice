@@ -31,7 +31,7 @@ const handleErrors = (err) => {
 };
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({ id }, "Amr DB Secret Key", { expiresIn: maxAge });
+  return jwt.sign({ id }, process.env.secretKey, { expiresIn: maxAge });
 };
 class AuthController {
   async signup_get(req, res) {
@@ -67,9 +67,13 @@ class AuthController {
       res.status(200).json({ user: user._id });
     } catch (err) {
       const errors = handleErrors(err);
-      log(errors);
+      console.log(errors);
       res.status(400).json({ errors });
     }
+  }
+  logOut(req, res) {
+    res.clearCookie("jwt");
+    res.redirect("/");
   }
 }
 
